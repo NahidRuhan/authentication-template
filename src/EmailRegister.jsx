@@ -1,7 +1,9 @@
-import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
-import { useState } from "react";
+import { sendEmailVerification, updateProfile } from "firebase/auth";
+// import { createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from "firebase/auth";
+import { useContext, useState } from "react";
 import { Link } from "react-router";
-import { auth } from "./firebase.init";
+// import { auth } from "./firebase.init";
+import { AuthContext } from "./contexts/AuthContext";
 
 const EmailRegister = () => {
   const [username, setUsername] = useState('');
@@ -11,6 +13,7 @@ const EmailRegister = () => {
   const [error, setError] = useState("");
   const [success,setSuccess] = useState(false)
   const [showPassword, setShowPassword] = useState(false);
+  const {createUser} = useContext(AuthContext)
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -27,7 +30,7 @@ const EmailRegister = () => {
       setError("Please accept our terms and condition")
     }
 
-    createUserWithEmailAndPassword(auth,email,password)
+    createUser(email,password)
     .then(res=>{
       console.log(res.user)
       setSuccess(true)
@@ -41,6 +44,37 @@ const EmailRegister = () => {
     })
     .catch(error => setError(error.message))
   };
+
+  // without using AuthContext
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   setError('')
+  //   setSuccess(false)
+
+  // const passChecker = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}[\]:;"'<>,.?/\\|`~]).{7,}$/
+  //   if(!passChecker.test(password)){
+  //     setError('Password must contain blah blah blah')
+  //     return
+  //   }
+
+  //   if(!e.target.terms.checked){
+  //     setError("Please accept our terms and condition")
+  //   }
+
+  //   createUserWithEmailAndPassword(auth,email,password)
+  //   .then(res=>{
+  //     console.log(res.user)
+  //     setSuccess(true)
+  //     e.target.reset()
+  //     const profile = {
+  //       displayName: username,
+  //       photoURL: photo
+  //     }
+  //     updateProfile(res.user,profile)
+  //     sendEmailVerification(res.user).then(()=>alert('Please verify your email address'))
+  //   })
+  //   .catch(error => setError(error.message))
+  // };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">

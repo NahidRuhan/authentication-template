@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { createContext, StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter } from "react-router";
@@ -7,6 +7,11 @@ import Root from './Root';
 import Home from './Home';
 import EmailRegister from './EmailRegister';
 import EmailLogin from './EmailLogin';
+import AuthProvider from './contexts/AuthProvider';
+import PrivateRoutes from './routes/PrivateRoutes';
+import PrivateRoute from './PrivateRoute';
+
+const AuthContext = createContext(null)
 
 const router = createBrowserRouter([
   {
@@ -25,11 +30,17 @@ const router = createBrowserRouter([
         path: '/login',
         Component: EmailLogin
       },
+      {
+        path: '/private',
+        element: <PrivateRoutes>
+                 <PrivateRoute></PrivateRoute>
+                 </PrivateRoutes>
+      }
     ]
   },
 ]);
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-  <RouterProvider router={router} />
+  <AuthProvider><RouterProvider router={router} /></AuthProvider>
   </StrictMode>,
 )

@@ -6,7 +6,7 @@ import {
   GithubAuthProvider 
 } from "firebase/auth";
 import { auth } from "./firebase.init";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();
@@ -14,12 +14,14 @@ const githubProvider = new GithubAuthProvider();
 const Login = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleGoogleSignIn = () => {
     signInWithPopup(auth, googleProvider)
       .then((res) => {
         console.log(res.user);
         setUser(res.user);
+        navigate(location.state || '/')
       })
       .catch((error) => console.log(error));
   };
@@ -29,6 +31,7 @@ const Login = () => {
       .then((res) => {
         console.log(res.user);
         setUser(res.user);
+        navigate(location.state || '/')
       })
       .catch((error) => console.log(error));
   };
